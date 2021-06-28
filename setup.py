@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="magic_config",
-    version="0.0.2",
+    version="0.0.3",
     author="mogaiskii",
     author_email="sani.mog@gmail.com",
     description="declarative settings with multiple backends",
