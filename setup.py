@@ -6,13 +6,13 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="magic_config",
-    version="0.0.1",
+    version="0.0.2",
     author="mogaiskii",
     author_email="sani.mog@gmail.com",
     description="declarative settings with multiple backends",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/pypa/sampleproject",
+    url="https://github.com/mogaiskii/magic_config",
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
@@ -21,5 +21,7 @@ setuptools.setup(
     package_dir={"": "src"},
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
+    license="MIT",
+    keywords=["config", "settings", "configuration"]
 )
 
