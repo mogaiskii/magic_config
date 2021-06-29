@@ -1,12 +1,14 @@
+from typing import Type
+
 __all__ = ['SettingField']
 
-from .utils import NULL
-from .manager import BaseSettingsManager
-from .settings_types import SettingType
+from magic_config.utils import NULL
+from magic_config.interfaces import AbstractSettingField, AbstractSettingType, AbstractSettingsManager
 
 
-class SettingField:
-    def __init__(self, type_: SettingType, name=NULL, default_value=NULL, **loaders_kwargs):
+class SettingField(AbstractSettingField):
+
+    def __init__(self, type_: Type[AbstractSettingType], name=NULL, default_value=NULL, **loaders_kwargs):
         """
         :param type_: type of field, should be subclass of SettingType
 
@@ -22,25 +24,21 @@ class SettingField:
             self._default_value = default_value
 
         self._name: str = name
-        self._current_value = NULL
         self._loaders_kwargs = loaders_kwargs
 
     def __set_name__(self, owner, name):
-        assert isinstance(owner, BaseSettingsManager)
+        assert isinstance(owner, AbstractSettingsManager) or issubclass(owner, AbstractSettingsManager)
         self._name = name
 
     def __get__(self, instance, owner_cls):
-        assert isinstance(instance, BaseSettingsManager)
+        assert isinstance(instance, AbstractSettingsManager)
         return self._load_value(instance)
 
     def __set__(self, instance, value):
-        assert isinstance(instance, BaseSettingsManager)
+        assert isinstance(instance, AbstractSettingsManager)
         self._set_value(instance, value)
 
-    def _load_value(self, instance: BaseSettingsManager):
-        if self._current_value is not NULL:
-            return self._current_value
-
+    def _load_value(self, instance: AbstractSettingsManager):
         loaders = instance.get_loaders()
         value = NULL
         for loader in loaders:
@@ -53,7 +51,9 @@ class SettingField:
 
         return self._type.parse(value)
 
-    def _set_value(self, instance: BaseSettingsManager, value):
+    def _set_value(self, instance: AbstractSettingsManager, value):
         loader = instance.get_main_loader()
+        casted_value = self._type.cast(value)
+        serialized_value = self._type.serialize(casted_value)
         if loader:
-            loader.set_value(self._name, value, **self._loaders_kwargs)
+            loader.set_value(self._name, serialized_value, **self._loaders_kwargs)
