@@ -21,15 +21,31 @@ class AbstractSettingField(abc.ABC):
 
 
 class AbstractLoader(abc.ABC):
-    @abc.abstractmethod
-    def get_value(self, field_name, **kwargs): ...
 
     @abc.abstractmethod
-    def set_value(self, field_name, value, param): ...
+    def get_value(self, field_name, **kwargs):
+        """
+        :param field_name - field meta name
+        """
+        ...
 
     @abc.abstractmethod
-    def get_key(self, field_name, **kwargs): ...
+    def set_value(self, field_name, value, **kwargs):
+        """
+        :param field_name: field meta name
+        :param value: new value
+        """
+        ...
 
+    @abc.abstractmethod
+    def get_key(self, field_name, **kwargs):
+        """
+        :param field_name: field meta name
+        """
+        ...
+
+    @abc.abstractmethod
+    def is_readonly(self) -> bool: ...
 
 
 class AbstractSettingType(abc.ABC):
@@ -41,11 +57,10 @@ class AbstractSettingType(abc.ABC):
     @abc.abstractmethod
     def serialize(cls, value): ...
 
-    """
-    cast python value to type
-    """
     @classmethod
     @abc.abstractmethod
-    def cast(cls, value): ...
-
-
+    def cast(cls, value):
+        """
+        cast python value to type
+        """
+        ...
