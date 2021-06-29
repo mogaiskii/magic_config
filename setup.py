@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="magic_config",
-    version="0.0.5",
+    version="0.1.0",
     author="mogaiskii",
     author_email="sani.mog@gmail.com",
     description="declarative settings with multiple backends",
@@ -22,6 +22,9 @@ setuptools.setup(
     packages=setuptools.find_packages(where="src"),
     python_requires=">=3.6",
     license="MIT",
-    keywords=["config", "settings", "configuration"]
+    keywords=["config", "settings", "configuration"],
+    install_requires=[
+        'pyyaml~=5.4.1',
+    ]
 )
 

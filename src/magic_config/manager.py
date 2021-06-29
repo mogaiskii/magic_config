@@ -21,7 +21,15 @@ class BaseSettingsManagerMeta(abc.ABCMeta):
                 fields.append(field)
 
         attrs[_FIELDS_REGISTRY] = fields
-        return super().__new__(mcls, name, bases, attrs)
+        cls = super().__new__(mcls, name, bases, attrs)
+        cls._immutable = True
+        return cls
+
+    def __setattr__(self, key, value):
+        if getattr(self, '_immutable', False):
+            pass
+        else:
+            super().__setattr__(key, value)
 
 
 class BaseSettingsManager(AbstractSettingsManager, metaclass=BaseSettingsManagerMeta):
@@ -46,8 +54,9 @@ class BaseSettingsManager(AbstractSettingsManager, metaclass=BaseSettingsManager
         return self._loaders
 
     def get_main_loader(self) -> Optional[AbstractLoader]:
-        if self._loaders:
-            return self._loaders[0]
+        for loader in self._loaders:
+            if not loader.is_readonly():
+                return loader
 
         return None
 
